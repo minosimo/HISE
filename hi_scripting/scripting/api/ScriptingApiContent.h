@@ -1023,6 +1023,7 @@ public:
 		enum Properties
 		{
 			Items = ScriptComponent::numProperties,
+			ItemHeight,
 			FontName,
 			FontSize,
 			FontStyle,

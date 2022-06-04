@@ -372,7 +372,7 @@ public:
 		numberTag->setBounds(getLocalBounds());
 	}
 
-#if 0
+#if 1
 	static void comboBoxPopupMenuFinishedCallback(int result, HiComboBox* combo)
 	{
 		if (combo != nullptr)
@@ -397,9 +397,6 @@ public:
 		//addItemsToMenu(menu);
 
 		menu.setLookAndFeel(&getLookAndFeel());
-		
-
-		
 
 		menu.showMenuAsync(PopupMenu::Options().withTargetComponent(this)
 			.withItemThatMustBeVisible(getSelectedId())
