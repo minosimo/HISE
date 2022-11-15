@@ -1100,6 +1100,12 @@ void PresetBrowser::setShowEditButtons(int buttonId, bool show)
 		tagList->setShowEditButton(show);
 }
 
+void PresetBrowser::setShowFavoritesOnly(bool shouldShowFavoritesOnly)
+{
+	favoriteButton->setToggleState(shouldShowFavoritesOnly, dontSendNotification);
+	updateFavoriteButton();
+}
+
 void PresetBrowser::setButtonsInsideBorder(bool inside)
 {
 	if (expansionColumn != nullptr)
@@ -1216,7 +1222,6 @@ void PresetBrowser::setOptions(const Options& newOptions)
 		expansionColumn->setModel(new PresetBrowserColumn::ExpansionColumnModel(this), expRoot);
 
 		expansionColumn->update();
-
 		showLoadedPreset();
 	}
 		
@@ -1247,6 +1252,7 @@ void PresetBrowser::setOptions(const Options& newOptions)
 	setShowEditButtons(1, newOptions.showAddButton);
 	setShowEditButtons(2, newOptions.showRenameButton);
 	setShowEditButtons(3, newOptions.showDeleteButton);
+	setShowFavoritesOnly(newOptions.showFavoritesOnly);
 	setButtonsInsideBorder(newOptions.buttonsInsideBorder);
 	setEditButtonOffset(newOptions.editButtonOffset);
 	setListAreaOffset(newOptions.listAreaOffset);

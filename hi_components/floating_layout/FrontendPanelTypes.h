@@ -822,6 +822,7 @@ public:
 		ShowAddButton,
 		ShowRenameButton,
 		ShowDeleteButton,
+    ShowFavoritesOnly,
 		ButtonsInsideBorder,
 		ColumnRowPadding,
 		SearchBarBounds,
