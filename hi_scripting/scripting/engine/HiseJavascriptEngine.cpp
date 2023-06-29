@@ -1359,6 +1359,7 @@ struct TokenWithDot : public mcl::TokenCollection::Token
             replaceArgs("updateCallback", "index, value");
             replaceArgs("presetPreCallback", "presetData");
             replaceArgs("presetPostCallback", "presetFile");
+						replaceArgs("presetPostSaveCallback", "presetFile");
             replaceArgs("newProcessFunction", "fftData, startIndex");
             replaceArgs("backgroundTaskFunction", "thread");
             replaceArgs("newFinishCallback", "isFinished, wasCancelled");

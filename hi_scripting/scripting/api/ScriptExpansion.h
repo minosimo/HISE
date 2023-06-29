@@ -53,7 +53,7 @@ public:
 
 	int getNumChildElements() const override
 	{
-		return 2;
+		return 3;
 	}
 
 	DebugInformationBase* getChildElement(int index) override
@@ -62,8 +62,10 @@ public:
 			return preCallback.createDebugObject("preCallback");
 		if (index == 1)
 			return postCallback.createDebugObject("postCallback");
-        
-        return nullptr;
+		if (index == 2)
+			return postSaveCallback.createDebugObject("postSaveCallback");
+			
+		return nullptr;
 	}
 
 	// =================================================================================== API Methods
@@ -76,6 +78,9 @@ public:
 
 	/** Sets a callback that will be executed after the preset has been loaded. */
 	void setPostCallback(var presetPostCallback);
+
+	/** Sets a callback that will be executed after the preset has been saved or renamed. */
+	void setPostSaveCallback(var presetPostSaveCallback);
 
 	/** Enables a preprocessing of every user preset that is being loaded. */
 	void setEnableUserPresetPreprocessing(bool processBeforeLoading, bool shouldUnpackComplexData);
@@ -125,6 +130,8 @@ public:
 	ValueTree prePresetLoad(const ValueTree& dataToLoad, const File& fileToLoad) override;
 
 	void presetChanged(const File& newPreset) override;
+	
+	void presetSaved(const File& presetFile) override;
 
 	void presetListUpdated() override
 	{
@@ -193,6 +200,7 @@ private:
 	bool unpackComplexData = false;
 	WeakCallbackHolder preCallback;
 	WeakCallbackHolder postCallback;
+	WeakCallbackHolder postSaveCallback;
 
 	WeakCallbackHolder customLoadCallback;
 	WeakCallbackHolder customSaveCallback;

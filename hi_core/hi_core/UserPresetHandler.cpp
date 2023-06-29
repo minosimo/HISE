@@ -636,6 +636,30 @@ void MainController::UserPresetHandler::postPresetLoad()
 	mc->getLockFreeDispatcher().callOnMessageThreadAfterSuspension(this, f);
 }
 
+void MainController::UserPresetHandler::postPresetSave()
+{
+	auto f = [](Dispatchable* obj)
+	{
+		auto uph = static_cast<UserPresetHandler*>(obj);
+		auto mc_ = uph->mc;
+		ignoreUnused(mc_);
+		jassert_dispatched_message_thread(mc_);
+
+		ScopedLock sl(uph->listeners.getLock());
+
+		for (auto l : uph->listeners)
+		{
+			uph->mc->checkAndAbortMessageThreadOperation();
+
+			if (l != nullptr)
+				l->presetSaved(uph->currentlyLoadedFile);
+		}
+
+		return Status::OK;
+	};
+
+	mc->getLockFreeDispatcher().callOnMessageThreadAfterSuspension(this, f);
+}
 
 
 void MainController::UserPresetHandler::incPreset(bool next, bool stayInSameDirectory)
