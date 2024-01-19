@@ -172,7 +172,18 @@ juce::StringArray WavetableSynth::getWavetableList() const
 	}
 	else
 	{
-		auto dir = getMainController()->getCurrentFileHandler().getSubDirectory(ProjectHandler::SubDirectories::AudioFiles);
+		
+		File dir;
+		
+		if(FullInstrumentExpansion::isEnabled(getMainController()))
+		{
+		  if (auto e = getMainController()->getExpansionHandler().getCurrentExpansion())
+		    dir = e->getSubDirectory(ProjectHandler::SubDirectories::AudioFiles);
+		}
+		else
+		{
+			dir = getMainController()->getCurrentFileHandler().getSubDirectory(ProjectHandler::SubDirectories::AudioFiles);	
+		}	
 
 		Array<File> wavetables;
 		dir.findChildFiles(wavetables, File::findFiles, true, "*.hwt");
