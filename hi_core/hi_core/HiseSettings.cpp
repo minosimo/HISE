@@ -1200,12 +1200,7 @@ var HiseSettings::Data::getDefaultSetting(const Identifier& id) const
 	else if (id == Audio::Samplerate)				return dynamic_cast<AudioProcessorDriver*>(mc)->getCurrentSampleRate();
 	else if (id == Audio::BufferSize)				return dynamic_cast<AudioProcessorDriver*>(mc)->getCurrentBlockSize();
 	else if (id == Midi::MidiInput)					return dynamic_cast<AudioProcessorDriver*>(mc)->getMidiInputState().toInt64();
-	else if (id == Midi::MidiChannels)
-	{
-		auto state = BigInteger(dynamic_cast<AudioProcessorDriver*>(mc)->getChannelData());
-		auto firstSetBit = state.getHighestBit();
-		return ConversionHelpers::getChannelList()[firstSetBit];
-	}
+	else if (id == Midi::MidiChannels) 			return ConversionHelpers::getChannelList()[1];
 
 	return var();
 }
