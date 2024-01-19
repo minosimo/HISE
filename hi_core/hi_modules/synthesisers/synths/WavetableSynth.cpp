@@ -130,7 +130,7 @@ juce::File WavetableSynth::getWavetableMonolith() const
 
 	if (auto e = getMainController()->getExpansionHandler().getCurrentExpansion())
 	{
-		dir = e->getSubDirectory(FileHandlerBase::SampleMaps);
+		dir = e->getSubDirectory(FileHandlerBase::Samples);
 		auto expData = dir.getChildFile("wavetables.hwm");
 
 		if (expData.existsAsFile())
