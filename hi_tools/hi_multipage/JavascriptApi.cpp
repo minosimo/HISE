@@ -317,11 +317,6 @@ var HtmlParser::getElement(DataProvider* d, HeaderInformation& hi, XmlElement* x
 			}
 		}
 
-		if(nv->hasProperty(mpid::Code))
-		{
-			nv->setProperty(mpid::UseOnValue, true);
-		}
-
 		if(itemList.isNotEmpty())
 			nv->setProperty(mpid::Items, var(itemList.upToLastOccurrenceOf("\n", false, false)));
 
@@ -741,6 +736,7 @@ struct Dom: public ApiObject
 		setMethodWithHelp("getStyleData", BIND_MEMBER_FUNCTION_1(Dom::getStyleData), "Returns the global markdown style data.");
 		setMethodWithHelp("setStyleData", BIND_MEMBER_FUNCTION_1(Dom::setStyleData), "Sets the global markdown style data");
 		setMethodWithHelp("getClipboardContent", BIND_MEMBER_FUNCTION_1(Dom::getClipboardContent), "Returns the current clipboard content");
+        setMethodWithHelp("copyToClipboard", BIND_MEMBER_FUNCTION_1(Dom::copyToClipboard), "Copies the string to the system clipboard");
 		setMethodWithHelp("writeFile", BIND_MEMBER_FUNCTION_1(Dom::writeFile), "Writes the string content to the file");
 		setMethodWithHelp("readFile", BIND_MEMBER_FUNCTION_1(Dom::readFile), "Loads string content of the file");
 		setMethodWithHelp("navigate", BIND_MEMBER_FUNCTION_1(Dom::navigate), "Navigates to the page with the given index");
@@ -902,6 +898,18 @@ struct Dom: public ApiObject
 	{
 		return var(SystemClipboard::getTextFromClipboard());
 	}
+    
+    var copyToClipboard(const var::NativeFunctionArgs& args) const
+    {
+        if(args.numArguments == 1)
+        {
+            auto f = args.arguments[0].toString();
+            SystemClipboard::copyTextToClipboard(f);
+        }
+        
+        return var();
+    }
+
 
 	var callAction(const var::NativeFunctionArgs& args)
 	{
