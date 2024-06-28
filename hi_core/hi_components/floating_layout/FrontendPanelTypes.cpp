@@ -956,6 +956,7 @@ var PresetBrowserPanel::toDynamicObject() const
 	storePropertyInObject(obj, SpecialPanelIds::ShowDeleteButton, options.showDeleteButton);
 	storePropertyInObject(obj, SpecialPanelIds::ShowSearchBar, options.showSearchBar);
 	storePropertyInObject(obj, SpecialPanelIds::ShowFavoriteIcon, options.showFavoriteIcons);
+	storePropertyInObject(obj, SpecialPanelIds::FullPathFavorites, options.fullPathFavorites);
 	storePropertyInObject(obj, SpecialPanelIds::ButtonsInsideBorder, options.buttonsInsideBorder);
 	storePropertyInObject(obj, SpecialPanelIds::NumColumns, options.numColumns);
 	storePropertyInObject(obj, SpecialPanelIds::ColumnWidthRatio, var(options.columnWidthRatios));
@@ -981,6 +982,7 @@ void PresetBrowserPanel::fromDynamicObject(const var& object)
 	options.showRenameButton = getPropertyWithDefault(object, SpecialPanelIds::ShowRenameButton);
 	options.showDeleteButton = getPropertyWithDefault(object, SpecialPanelIds::ShowDeleteButton);
 	options.showSearchBar = getPropertyWithDefault(object, SpecialPanelIds::ShowSearchBar);
+	options.fullPathFavorites = getPropertyWithDefault(object, SpecialPanelIds::FullPathFavorites);
 	options.buttonsInsideBorder = getPropertyWithDefault(object, SpecialPanelIds::ButtonsInsideBorder);
 	options.editButtonOffset = getPropertyWithDefault(object, SpecialPanelIds::EditButtonOffset);
 	options.showExpansions = getPropertyWithDefault(object, SpecialPanelIds::ShowExpansionsAsColumn);
@@ -1074,6 +1076,7 @@ juce::Identifier PresetBrowserPanel::getDefaultablePropertyId(int index) const
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::ListAreaOffset, "ListAreaOffset");
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::ColumnRowPadding, "ColumnRowPadding");
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::SearchBarBounds, "SearchBarBounds");
+	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::FullPathFavorites, "FullPathFavorites");
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::FavoriteButtonBounds, "FavoriteButtonBounds");
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::SaveButtonBounds, "SaveButtonBounds");
 	RETURN_DEFAULT_PROPERTY_ID(index, SpecialPanelIds::MoreButtonBounds, "MoreButtonBounds");
@@ -1101,6 +1104,7 @@ var PresetBrowserPanel::getDefaultProperty(int index) const
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ShowEditButtons, true);
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ShowAddButton, true);
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ShowRenameButton, true);
+	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::FullPathFavorites, false);
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ShowDeleteButton, true);
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ShowSearchBar, true);
 	RETURN_DEFAULT_PROPERTY(index, SpecialPanelIds::ButtonsInsideBorder, false);
