@@ -349,7 +349,7 @@ void SimpleText::createEditor(Dialog::PageInfo& rootList)
 }
 #endif
 
-String MarkdownText::getString(const String& markdownText, Dialog& parent)
+String MarkdownText::getString(const String& markdownText, const State& state)
 {
 	if(markdownText.contains("$"))
 	{
@@ -374,10 +374,10 @@ String MarkdownText::getString(const String& markdownText, Dialog& parent)
 					{
 						if(variableId.isNotEmpty())
 						{
-							auto v = parent.getState().globalState[Identifier(variableId)].toString();
+							auto v = state.globalState[Identifier(variableId)].toString();
 
 							if(v.isNotEmpty())
-								other << getString(v, parent);
+								other << getString(v, state);
 
 							variableId = {};
 						}
@@ -394,9 +394,9 @@ String MarkdownText::getString(const String& markdownText, Dialog& parent)
 
 				if(variableId.isNotEmpty())
 				{
-					auto v = parent.getState().globalState[Identifier(variableId)].toString();
+					auto v = state.globalState[Identifier(variableId)].toString();
 
-                    v = getString(v, parent);
+                    v = getString(v, state);
                     
 					if(v.isNotEmpty())
 						other << v;
@@ -458,15 +458,15 @@ MarkdownText::MarkdownText(Dialog& d, int width_, const var& obj_):
 	width((float)width_),
 	obj(obj_)
 {
+	Helpers::writeClassSelectors(*this, { ".markdown" }, true);
+	
 	display.r.setImageProvider(new AssetImageProvider(&display.r, d.getState()));
 	display.setResizeToFit(true);
-	
-	Helpers::writeSelectorsToProperties(display, {".markdown"});
+
+	//Helpers::writeSelectorsToProperties(display, {".markdown"});
 
 	setDefaultStyleSheet("width: 100%; height: auto;");
 	Helpers::setFallbackStyleSheet(display, "width: 100%;");
-
-	
 
 	addFlexItem(display);
 
@@ -485,7 +485,7 @@ void MarkdownText::postInit()
 		display.r.setStyleData(root->css.getMarkdownStyleData(&display));
 	}
 
-	auto markdownText = getString(infoObject[mpid::Text].toString(), rootDialog);
+	auto markdownText = getString(infoObject[mpid::Text].toString(), rootDialog.getState());
 
 	if(markdownText.startsWith("${"))
 		markdownText = rootDialog.getState().loadText(markdownText, true);
@@ -1233,6 +1233,15 @@ StringArray Factory::getIdList() const
 	}
 		
 	return sa;
+}
+
+String Factory::getCategoryName(const String& id) const
+{
+	for(const auto& i: items)
+		if(i.id == Identifier(id))
+			return i.category.toString();
+
+	return id;
 }
 
 StringArray Factory::getPopupMenuList() const

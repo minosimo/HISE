@@ -248,6 +248,11 @@ void LabelledComponent::postInit()
 void LabelledComponent::resized()
 {
     FlexboxComponent::resized();
+
+    if(helpButton != nullptr)
+	{
+		setHiseShapeButtonColours(*helpButton);
+	}
 }
 
 #if HISE_MULTIPAGE_INCLUDE_EDIT
@@ -1570,7 +1575,7 @@ File FileSelector::getInitialFile(const var& path) const
 {
 	if(path.isString())
 	{
-        auto t = MarkdownText::getString(path.toString(), rootDialog);
+        auto t = MarkdownText::getString(path.toString(), rootDialog.getState());
 		return File(t);
 	}
 	if(path.isInt() || path.isInt64())

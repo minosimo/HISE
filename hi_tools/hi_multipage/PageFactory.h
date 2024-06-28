@@ -53,7 +53,9 @@ struct Factory: public PathFactory
     bool needsIdAtCreation(const String& id) const;
 
     StringArray getIdList() const;
-    
+
+    String getCategoryName(const String& id) const;
+
     Path createPath(const String& url) const override;
     
 private:
@@ -222,7 +224,7 @@ struct MarkdownText: public Dialog::PageBase
     }
 
     static String getCategoryId() { return "Layout"; }
-    static String getString(const String& markdownText, Dialog& parent);
+    static String getString(const String& markdownText, const State& parent);
 
     MarkdownText(Dialog& r, int width, const var& d);
 

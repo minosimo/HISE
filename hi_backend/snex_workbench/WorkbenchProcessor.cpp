@@ -185,7 +185,7 @@ void DspNetworkCompileExporter::writeDebugFileAndShowSolution()
     auto isUsingVs2017 = HelperClasses::isUsingVisualStudio2017(settings);
     auto vsString = isUsingVs2017 ? "VisualStudio2017" : "VisualStudio2022";
     auto vsVersion = isUsingVs2017 ? "15.0" : "17.0";
-	auto folder = currentExecutable.getFullPathName().contains(" with Faust") ? "Debug with Faust" : "Debug";
+	auto folder = currentExecutable.getFullPathName().contains(" with Faust") ? "Debug with Faust" : "Minimal Build";
 
 	debugExecutable = debugExecutable.getChildFile(vsString).getChildFile("x64").getChildFile(folder).getChildFile("App").getChildFile("HISE Debug.exe");
 
@@ -206,7 +206,7 @@ void DspNetworkCompileExporter::writeDebugFileAndShowSolution()
 
 	jassert(debugExecutable.existsAsFile());
 
-	ldc->addTextElement(debugExecutable.getFullPathName());
+	ldc->addTextElement(debugExecutable.getFullPathName()) ;
 	
 	pg->addChildElement(ldc);
 	auto df = new XmlElement("DebuggerFlavor");
@@ -860,6 +860,12 @@ void DspNetworkCompileExporter::createProjucerFile()
 	REPLACE_WILDCARD_WITH_STRING("%NAME%", projectName);
 	REPLACE_WILDCARD_WITH_STRING("%HISE_PATH%", hisePath.getFullPathName());
 	REPLACE_WILDCARD_WITH_STRING("%JUCE_PATH%", jucePath.getFullPathName());
+
+	String s = GET_HISE_SETTING(getMainController()->getMainSynthChain(), HiseSettings::Project::ExtraDefinitionsNetworkDll).toString();
+
+	REPLACE_WILDCARD_WITH_STRING("%EXTRA_DEFINES_LINUX%", s);
+	REPLACE_WILDCARD_WITH_STRING("%EXTRA_DEFINES_WIN%", s);
+	REPLACE_WILDCARD_WITH_STRING("%EXTRA_DEFINES_OSX%", s);
 
 	auto includeFaust = BackendDllManager::shouldIncludeFaust(getMainController());
 	REPLACE_WILDCARD_WITH_STRING("%HISE_INCLUDE_FAUST%", includeFaust ? "enabled" : "disabled");
