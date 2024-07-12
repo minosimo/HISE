@@ -76,6 +76,14 @@ void Action::createBasicEditor(T& t, Dialog::PageInfo& rootList, const String& h
 		{ mpid::Help, "Additional inline properties that will be used by the UI element" }
 	});
 
+	css.addChild<Choice>({
+		{ mpid::ID, mpid::Visibility.toString() },
+		{ mpid::Text, mpid::Visibility.toString() },
+        { mpid::Items, Dialog::PageBase::getVisibilityNames().joinIntoString("\n") },
+        { mpid::Value, infoObject[mpid::Visibility] },
+		{ mpid::Help, "Whether to show or hide the element" }
+	});
+
 	rootList.addChild<Choice>({
 		{ mpid::ID, mpid::EventTrigger.toString() },
 		{ mpid::Text, mpid::EventTrigger.toString() },
@@ -249,6 +257,20 @@ void JavascriptFunction::createEditor(Dialog::PageInfo& rootList)
 Result JavascriptFunction::onAction()
 {
 	auto code = infoObject[mpid::Code].toString();
+
+	if(code.startsWith("{BIND::"))
+	{
+		auto fn = code.fromFirstOccurrenceOf("{BIND::", false, false).upToLastOccurrenceOf("}", false, false);
+
+		var thisObj(new DynamicObject());
+		var args[2];
+		args[0] = infoObject[mpid::ID];
+		args[1] = rootDialog.getState().globalState;
+		var::NativeFunctionArgs a(thisObj, args, 2);
+
+		rootDialog.getState().callNativeFunction(fn, a, nullptr);
+		return Result::ok();
+	}
 
 	if(code.startsWith("${"))
 	{
@@ -1172,6 +1194,11 @@ Result DownloadTask::performTaskStatic(WaitJob& t)
 	auto extraHeaders = obj[mpid::ExtraHeaders].toString();
 
 	auto targetFile = t.getTargetFile();
+
+	if(targetFile.isDirectory())
+	{
+		throw Result::fail("Target must not be a directory");
+	}
 
 	std::unique_ptr<URL::DownloadTask> dt;
     ScopedPointer<TemporaryFile> tempFile;

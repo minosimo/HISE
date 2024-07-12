@@ -66,6 +66,17 @@ namespace mpid
     // ALWAYS COPY IT HERE TOO!
     struct Helpers
     {
+        enum RequiredUpdate
+		{
+			PostInit,
+			ResizeParent,
+            UpdateVisibility,
+			UpdateCSS,
+			FullRebuild
+		};
+
+        static RequiredUpdate getUpdateType(const Identifier& id);
+
 	    static var getIdList();
     };
 
@@ -121,6 +132,7 @@ namespace mpid
     DECLARE_ID(Required);
     DECLARE_ID(RelativePath);
     DECLARE_ID(SaveFile);
+    DECLARE_ID(SelectOnClick);
     DECLARE_ID(SkipIfNoSource);
     DECLARE_ID(SkipFirstFolder);
     DECLARE_ID(Source);
@@ -148,6 +160,7 @@ namespace mpid
     DECLARE_ID(Value);
     DECLARE_ID(ValueMode);
     DECLARE_ID(Version);
+    DECLARE_ID(Visibility);
     DECLARE_ID(WaitTime);
     DECLARE_ID(Width);
     DECLARE_ID(Wildcard);
