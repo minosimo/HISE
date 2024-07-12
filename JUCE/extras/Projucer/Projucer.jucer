@@ -102,7 +102,8 @@
       </MODULEPATHS>
     </VS2022>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraCompilerFlags="-mtune=generic"
-                extraLinkerFlags="-no-pie" bigIcon="Zrx1Gl" smallIcon="Zrx1Gl">
+                extraLinkerFlags="-no-pie&#10;-flto=auto&#10;-fuse-ld=gold" bigIcon="Zrx1Gl"
+                smallIcon="Zrx1Gl">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" targetName="Projucer"/>
         <CONFIGURATION name="Release" isDebug="0" targetName="Projucer"/>
