@@ -562,6 +562,9 @@ public:
 		/** Sets the given class selectors for the component stylesheet. */
 		void setStyleSheetClass(const String& classIds);
 
+		/** Programatically sets a pseudo state (:hover, :active, :checked, :focus, :disabled) that will be used by the CSS renderer. */
+		void setStyleSheetPseudoState(const String& pseudoState);
+
 		// End of API Methods ============================================================================================
 
 		var getLookAndFeelObject();
@@ -692,6 +695,8 @@ public:
 
 		MacroControlledObject::ModulationPopupData::Ptr getModulationData() const { return modulationData; }
 
+		int getStyleSheetPseudoState() const { return pseudoState; }
+
 	protected:
 
 		String getCSSFromLocalLookAndFeel()
@@ -752,6 +757,8 @@ public:
 #endif
 
 	private:
+
+		int pseudoState = 0;
 
 		void sendValueListenerMessage();
 
@@ -2516,7 +2523,8 @@ public:
     };
     
     LambdaBroadcaster<TextInputDataBase::Ptr> textInputBroadcaster;
-    
+
+	LambdaBroadcaster<int, int> interfaceSizeBroadcaster;
     
 	// ================================================================================================================
 
@@ -3031,7 +3039,8 @@ private:
 	ScopedPointer<ValueTreeUpdateWatcher> updateWatcher;
 
 	bool allowGuiCreation;
-	int width, height;
+	int width = 0;
+	int height = 0;
 	ReferenceCountedArray<ScriptComponent> components; // This is ref counted to allow anonymous controls
 	Colour colour;
 	String name;

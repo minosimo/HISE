@@ -58,6 +58,8 @@ struct Factory: public PathFactory
 
     Path createPath(const String& url) const override;
     
+
+    
 private:
 
     template <typename T> void registerPage();
@@ -504,7 +506,7 @@ struct Table: public Dialog::PageBase,
         if(filterFunction.isEmpty())
             return {};
 
-        return Identifier(filterFunction);
+        return Identifier(filterFunction.fromFirstOccurrenceOf("{BIND::", false, false).upToLastOccurrenceOf("}", false, false));
     }
 };
 
