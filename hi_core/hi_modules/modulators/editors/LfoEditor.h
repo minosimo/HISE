@@ -59,7 +59,7 @@ public:
 		if (getProcessor()->getAttribute(LfoModulator::TempoSync) > 0.5f)
 			frequencySlider->setMode(HiSlider::Mode::TempoSync);
 		else
-			frequencySlider->setMode(HiSlider::Frequency, 0.5, 40.0, 10.0);
+			frequencySlider->setMode(HiSlider::Frequency, 0.5, 100.0, 10.0);
 
 		const bool newTableUsed = getProcessor()->getAttribute(LfoModulator::WaveFormType) == LfoModulator::Custom;
 		const bool newStepsUsed = getProcessor()->getAttribute(LfoModulator::WaveFormType) == LfoModulator::Steps;

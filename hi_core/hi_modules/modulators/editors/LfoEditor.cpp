@@ -38,7 +38,7 @@ LfoEditorBody::LfoEditorBody (ProcessorEditor *p)
     frequencySlider.reset (new HiSlider ("Frequency"));
     addAndMakeVisible (frequencySlider.get());
     frequencySlider->setTooltip (TRANS("Adjust the LFO Frequency"));
-    frequencySlider->setRange (0.5, 40, 0.01);
+    frequencySlider->setRange (0.5, 100, 0.01);
     frequencySlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     frequencySlider->setTextBoxStyle (Slider::TextBoxRight, true, 80, 20);
     frequencySlider->setColour (Slider::thumbColourId, Colour (0x80666666));
@@ -147,7 +147,7 @@ LfoEditorBody::LfoEditorBody (ProcessorEditor *p)
 	tableUsed = getProcessor()->getAttribute(LfoModulator::WaveFormType) == LfoModulator::Custom;
 
 	frequencySlider->setup(getProcessor(), LfoModulator::Frequency, "Frequency");
-	frequencySlider->setMode(HiSlider::Frequency, 0.1, 40.0, 10.0);
+	frequencySlider->setMode(HiSlider::Frequency, 0.1, 100.0, 10.0);
 
 	frequencySlider->setIsUsingModulatedRing(true);
 
