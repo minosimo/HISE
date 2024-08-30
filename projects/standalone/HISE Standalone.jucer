@@ -184,9 +184,11 @@
                 externalLibraries="faust">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="HISE Standalone"
-                       defines="HISE_INCLUDE_FAUST=1&#10;HISE_FAUST_USE_LLVM_JIT=1&#10;HISE_INCLUDE_FAUST_JIT=1"/>
+                       defines="HISE_INCLUDE_FAUST=1&#10;HISE_FAUST_USE_LLVM_JIT=1&#10;HISE_INCLUDE_FAUST_JIT=1"
+                       headerPath="/usr/include/freetype2&#10;/usr/include/gtk-3.0/gtk"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="HISE Standalone"
-                       linkTimeOptimisation="1" defines="HISE_INCLUDE_FAUST=1&#10;HISE_FAUST_USE_LLVM_JIT=1&#10;HISE_INCLUDE_FAUST_JIT=1"/>
+                       linkTimeOptimisation="1" defines="HISE_INCLUDE_FAUST=1&#10;HISE_FAUST_USE_LLVM_JIT=1&#10;HISE_INCLUDE_FAUST_JIT=1"
+                       headerPath="/usr/include/freetype2&#10;/usr/include/gtk-3.0/gtk"/>
         <CONFIGURATION name="TravisCI" isDebug="1" optimisation="1" targetName="HISE Standalone"
                        defines="TRAVIS_CI=1"/>
       </CONFIGURATIONS>
@@ -231,9 +233,10 @@
                 smallIcon="bfBEgJ" bigIcon="bfBEgJ" linuxExtraPkgConfig="x11 xinerama xext"
                 extraLinkerFlags="-no-pie&#10;-flto=auto&#10;-fuse-ld=gold" extraCompilerFlags="-fpermissive">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="HISE Standalone"/>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="HISE Standalone"
+                       headerPath="/usr/include/freetype2&#10;/usr/include/gtk-3.0/gtk"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="HISE Standalone"
-                       linkTimeOptimisation="1"/>
+                       linkTimeOptimisation="1" headerPath="/usr/include/freetype2&#10;/usr/include/gtk-3.0/gtk"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
