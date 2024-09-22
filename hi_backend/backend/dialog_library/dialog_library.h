@@ -111,6 +111,30 @@ struct WelcomeScreen: public multipage::EncodedDialogBase
 	var createProject(const var::NativeFunctionArgs& args);
 	var loadPresetFile(const var::NativeFunctionArgs& args);
 	var startupSetter(const var::NativeFunctionArgs& args);
+
+	Array<File> fileList;
+};
+
+struct AboutWindow: public multipage::EncodedDialogBase
+{
+    AboutWindow(BackendRootWindow* bpe):
+      EncodedDialogBase(bpe)
+    {
+        loadFrom("2356.sNB..D...............35H...oi...Hj.........J09R+fkGG0eD.pvFvSzBrt51FxS.GJgHRHiPo0VZsovYzaj2Fo6TvC3gTyQd7C19ewiPqeP+Gz8yVfF.NALR.zDPusXP9misArhhI60WWKzgIT5iHMrUYQEy0a5wLJXsUUqCBOcaIpGicJlWV6VHEX.QhHQwn8WsIn5Xq2ZQ.EbAATL+i+ma8avOA7vvKBEfe9Cyo0Ak80GgWDtvKBRIGy7HDhae+EvCGvIzwvsW9yrlne5m1ONrfvLtsxcU3POYwo395HTQnj77VFYMN8V3lqgkcGdaA8V7Dx1MONbe+USQbD4oi9SuJiCEiCI2ejgdDCGXP0.vR2h411hghXYFRlbYhDVtvu1csrF+5OQlTQhJQh70xcXW09WjfxEHjHhJRLghD+F7ewhDWnHAEdsqRDUnXIhI3K2BhIUpPohjHlPQw3HNcmqIqJBUDRTLNXKzhd33.XcjEAQ9VQF3x4S7vg+6GGJFG+yovgppFfKnXbr+tgcmdQNTM.WnFPdHsEYn51niUorbYGGU10P+UNNkJSgcyeJk+7+ZrVcSLVN0StmKasQ5AnjNuZ6jTylU7kd8VUZgdqenq+z091j9tdV83GOKUYqYqCS+U6ULOPWEYLAmMj3nIiDT.JTnH.8pctT2.F4qnWs4+6UPnXf9C40YwcSKvFSgRhhgsPK0Bb47JEioMNyrzKWyN3VKRBNbb09wAEoBFzHqlc9tB84lbMQO++4Dczjql981laoeWw1z4ZhDwE6p1GGO+F7HGX.ClMf7LwEtbMRM990add+VuIEOriVxszlfW1efmF4PUHvwKWqoIRDKbmHQXPl61dCBfpr0d0R8W+2ZRm9I02HkrErzcZ1hM1imwO5PSbqgVVG+I70a.iDwDqEJ8muoXN4R1yctTeHudtEK0JTRxfZgNTfBk2xauatX7kdZBkxM8Q1jC0WN2z2iRIYGbakR45rT90tnio7V+5o0wW5qOKBhJUr7ACKxHhDGK7LhjCx7gyFq94ZvSNGCI2.Jt3K25JtczWyUu6jpad4aQ1bgEjZ.Ej1vYyEZ1DJSGkhkSG+dqlktM25M1sIP7gCHPY5ngTCxXQz+MxONSkZjgJ+qk6bqjsZujh45+l91pr1HKUlHhiFOWnAIMd.cQGLbvmKvfjEY.xswICZzmLgxfCHRi39e+SHNdFM5hOgL4WulA5yc8VZaPOE2XU6TLvHCJGf.4h+8BNevBkKVd3AuulKES8vCXjv+0ZPBVMzecaFcLHr4QLqY7ku1j6bukikVM045GLbJ0WNWJVSQV6YMFLRTFYnfDmMY7I..LD.IHgnKkrkGgOV9rjk8FrJWKpuubR+WqWuYJjqT4awXXrF4qm5.b5wJft+Qj9nBkAMnxStS96kIzEdBwYCHNgHUAnKBw.VlgCQnpPAAWoYuFzROtsdq9V9WNZ8lznTYuQ1KbCN9bo0jCspY0Zlh+C7LQlQbzHCCHMwAAX4gJvj3RwoEIRXkjSRPp.CwpiOuswE9PjITt7uszy8pU4nuoWKGhiyehwatTu3rsYkd5aWWA4Jtlh76ZL8ZmUnqTJX4ubpeu.Nj3nQnLzPJzETPhBMDQIyd8e43teMFuYi+Fbds5fkKUhfRDI5iHhXBkIUzGTnHYhkI5iIWhHABIMnkzHmk0U5pNK6MNA8ATiOMY+7nl7aUxR2cWuUuXHbszmydH4AIWr06jTc3F+5Vf1hZbYLiRgHQF.L.DDDCB.fghA4TlGHJrzjnvXPLEvvD...EH.fAjnJbBIf.5BLVm6QDYPFdXCXfjojfHv1gSCDEwDiZnWFg8GFdLJWDC3RzaEQHcMTzvFCFAyj8p.zXz5LPSpTjPkvqWffJHHObn2gyK33M4pJiUbxk0hX9dzufcucn.8QzeONFiNJLsOZPQt2ApgMpe.zT5Rxbi72ltm.xQKH+Ahb60z306Y0rSZWp34Yx.n21fJMgiGsT84snA..ZZIXnQcvnG5Y8rAm1SBEUvmHD8CGpgZ2dEvCXqQVnSzFtEGvZd0Dqt9dtQX.vlMb.81DzqRLuWDpESyL.oVi81muG2mNRjt1oclOEo2h8UkrMKdL25zKQE.YrXLBFA4QQMPzORpB680CKocGU+AvXlZ2w070bt6eQq.Q.S21ePBaa+VciRFNvaBYJrQk82Pj2uG4iB948ryhEZ4E05wwB7F8msIXR7RTh27CgBYZDZEPnxZxrtDYCvrxf.wyP1LjUFa1tQdxlzOpV+mMSFFDy1+zAwtucUiZ6YLHSS63bqIHxlssTnpz2YhFky6kvIbLgpVQxnSQuNnBeUXj3AcR6.8St8PG2DZ9HfDaFx0GjTwfayFkrpEezB0vMeE+IaeTP8ANVKc8UY1oroFcBCzHSSFJwhH6vnCcwoypvnHa6fa2FY3ZRsUCpsIKPGNg45a.yr9ifqAK4A6aG6P4djN6wyLNrgHCT8yB9KLwSZ6pYnbmWK.5GRn3jwCDn370IXqlDT0hcNY7YIpUEZr0EpkIldpYy4ByGD.yovWnLuRJdWjhamoUEAanIEid1F7uPJxdWBq3ANsEpP0bAf9GMeEXNtzql4ggHBeIjx.2axfM1kPffnOUV+6FrNHcLMfkw8ZWyeBvnH.wAAIj9rRnJtpPKt0IDKUH0NgAKNtIyJ8yGfRBthT.JyNRc4S135q4K3hUnIviubcqxXHgxUN6CIG34SlLG7Q.HLcFNRbckITK3ayaqv6ImyQV3CjvBRlRv3k.VCX3rHXhJNCAK0d.VSX69y9PwuOhQFiNDd8q0CMSpRsavnrOuMZ7iJHTQDUNnp+wjmW.dbeQosjl1CjLycrt30TmQ5lADmR7Nb2bQ6wHI.+oO9FZ6qVUQSjZUs2iSBzqj.vK6zdKyObAJKh8sNRbdrYqwnj4imygBgKWDi3J5HejgA4WqaqSyfAa8Z94.d7CtgFlPDXn27Gewc5NFo+SSN1HCsx.tiDVAeHPm62RDDXZW5T3MhjlGfsltebmOZiOJl7FFmdJrbr5EGTE6uDD.a9irQ+UqzBQMnSJl5KMDI37ADx9.NJ4XngBsl4yCVcbsfB3oIdQVL9GN27UTkT+uIqaJQeBXuCT5H..foi...rNB...");
+    }
+    
+    void bindCallbacks() override
+    {
+        MULTIPAGE_BIND_CPP(AboutWindow, initValues);
+        MULTIPAGE_BIND_CPP(AboutWindow, showCommit);
+    }
+
+    var initValues(const var::NativeFunctionArgs& args);
+    var showCommit(const var::NativeFunctionArgs& args);
+    
+    URL commitLink;
+
+	JUCE_DECLARE_WEAK_REFERENCEABLE(AboutWindow);
 };
 
 struct NewProjectCreator: public ImporterBase,
