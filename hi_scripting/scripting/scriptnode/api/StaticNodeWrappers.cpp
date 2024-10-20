@@ -245,8 +245,9 @@ void InterpretedCableNode::prepare(PrepareSpecs ps)
 
 	try
 	{
-		ModulationSourceNode::prepare(ps);
 		this->obj.prepare(ps);
+		ModulationSourceNode::prepare(ps);
+		
 	}
 	catch (Error& s)
 	{
@@ -802,6 +803,7 @@ TemplateNodeFactory::TemplateNodeFactory(DspNetwork* n) :
 
 			Array<DspNetwork::IdChange> changes;
 			auto newTree = n->cloneValueTreeWithNewIds(v, changes, false);
+			DuplicateHelpers::removeOutsideConnections({ newTree }, changes );
 
 			for(auto& c: changes)
 	            n->changeNodeId(newTree, c.oldId, c.newId, nullptr);

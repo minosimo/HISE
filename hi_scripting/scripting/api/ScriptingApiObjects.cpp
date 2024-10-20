@@ -6113,6 +6113,21 @@ int ScriptingObjects::ScriptedMidiPlayer::getNumTracks()
 }
 
 
+var ApiHelpers::getDispatchTypeMagicNumber(dispatch::DispatchType n)
+{
+	using Type = dispatch::DispatchType;
+
+	switch(n)
+	{
+	case dispatch::dontSendNotification: return var(false);
+	case dispatch::sendNotification: return var(true);
+	case dispatch::sendNotificationSync: return var(SyncMagicNumber);
+	case dispatch::sendNotificationAsync: return var(AsyncMagicNumber);;
+	case dispatch::sendNotificationAsyncHiPriority: return var(AsyncHiPriorityMagicNumber);
+	default: return var(false);
+	}
+}
+
 dispatch::DispatchType ApiHelpers::getDispatchType(const var& syncValue, bool getDontForFalse)
 {
 	using Type = dispatch::DispatchType;
@@ -6140,6 +6155,19 @@ var ApiHelpers::getVarFromPoint(Point<float> pos)
 	p.add(pos.getX());
 	p.add(pos.getY());
 	return var(p);
+}
+
+MouseCursor::StandardCursorType ApiHelpers::getMouseCursorFromString(const String& name, Result* r)
+{
+	auto iconIds = getMouseCursorNames();
+	auto index = iconIds.indexOf(name);
+
+	if (isPositiveAndBelow(index, (MouseCursor::NumStandardCursorTypes)))
+		return (MouseCursor::StandardCursorType)index;
+	else if( r != nullptr)
+		*r = Result::fail("Unknown Cursor name. Use the JUCE enum as string");
+
+	return MouseCursor::StandardCursorType::NormalCursor;
 }
 
 juce::Array<juce::Identifier> ApiHelpers::getGlobalApiClasses()
