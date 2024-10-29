@@ -1071,11 +1071,6 @@ void PresetBrowser::setShowFavorites(bool shouldShowFavorites)
 	showFavoritesButton = shouldShowFavorites;
 }
 
-void PresetBrowser::setShowFullPathFavorites(bool shouldShowFullPathFavorites)
-{
-	fullPathFavorites = shouldShowFullPathFavorites;
-}
-
 void PresetBrowser::setShowSearchBar(bool shouldBeShown)
 {
 	if (shouldBeShown != searchBar->isVisible())
@@ -1083,6 +1078,11 @@ void PresetBrowser::setShowSearchBar(bool shouldBeShown)
 		searchBar->setVisible(shouldBeShown);
 		resized();
 	}
+}
+
+void PresetBrowser::setShowFullPathFavorites(bool shouldShowFullPathFavorites)
+{
+	fullPathFavorites = shouldShowFullPathFavorites;
 }
 
 void PresetBrowser::setHighlightColourAndFont(Colour c, Colour bgColour, Font f)

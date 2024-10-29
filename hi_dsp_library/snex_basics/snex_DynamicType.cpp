@@ -18,6 +18,10 @@ VariableStorage::VariableStorage(Types::ID type_, const var& value)
 		data.d.value = static_cast<double>(value);
 	else if (type_ == Types::ID::Pointer)
 		data.p.data = reinterpret_cast<void*>((int64)value);
+	else if (type_ == Types::ID::Event)
+		data.e = HiseEvent();
+	else if (type_ == Types::ID::Block)
+		data.b = {};
 	else
 		jassertfalse;
 }
@@ -39,7 +43,7 @@ VariableStorage::VariableStorage(const block& b)
 	data.b.referTo(b);
 }
 
-VariableStorage::VariableStorage(HiseEvent& m_)
+VariableStorage::VariableStorage(const HiseEvent& m_)
 {
 	data.e = m_;
 }
@@ -250,9 +254,7 @@ snex::block VariableStorage::toBlock() const
 
 HiseEvent VariableStorage::toEvent() const
 {
-	auto t = getTypeValue();
-
-	if (t < (int)HiseEvent::Type::numTypes)
+	if (getType() == Types::ID::Event)
 		return data.e;
 
 	return HiseEvent();
