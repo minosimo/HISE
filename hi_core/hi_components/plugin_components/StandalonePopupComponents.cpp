@@ -563,7 +563,7 @@ void CustomSettingsWindow::comboBoxChanged(ComboBox* comboBoxThatHasChanged)
 	}
 }
 
-#define DRAW_LABEL(id, text) if (isOn(id)) { g.drawText(text, 0, y, getWidth() / 2 - 30, 30, Justification::centredRight); y += 40; }
+#define DRAW_LABEL(id, text) if (isOn(id)) { g.drawText(text, 0, y, getWidth() / 2 - 30, 30, Justification::centredLeft); y += 40; }
 
 void CustomSettingsWindow::paint(Graphics& g)
 {
@@ -605,7 +605,7 @@ void CustomSettingsWindow::paint(Graphics& g)
 
 #undef DRAW_LABEL
 
-#define POSITION_COMBOBOX(id, comboBox) if (isOn(id)) {comboBox->setBounds(getWidth() / 2 - 20, y, getWidth() / 2, 30); y += 40; } else comboBox->setVisible(false);
+#define POSITION_COMBOBOX(id, comboBox) if (isOn(id)) {comboBox->setBounds(getWidth() / 2 - 20, y, getWidth() / 2 - 20, 30); y += 40; } else comboBox->setVisible(false);
 #define POSITION_BUTTON(id, button) if (isOn(id)) {button->setBounds(10, y, getWidth() - 20, 30); y += 40; } else button->setVisible(false);
 
 void CustomSettingsWindow::resized()
