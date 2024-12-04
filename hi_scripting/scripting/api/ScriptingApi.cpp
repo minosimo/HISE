@@ -5269,6 +5269,7 @@ ScriptingApi::Synth::Synth(ProcessorWithScriptingContent *p, Message* messageObj
 	ADD_API_METHOD_2(setAttribute);
 	ADD_API_METHOD_1(getAttribute);
 	ADD_API_METHOD_4(addNoteOn);
+	ADD_API_METHOD_5(addNoteOnGodmode);
 	ADD_API_METHOD_3(addNoteOff);
 	ADD_API_METHOD_3(addVolumeFade);
 	ADD_API_METHOD_4(addPitchFade);
