@@ -5186,6 +5186,7 @@ struct ScriptingApi::Synth::Wrapper
 	API_VOID_METHOD_WRAPPER_2(Synth, setAttribute);
 	API_METHOD_WRAPPER_1(Synth, getAttribute);
 	API_METHOD_WRAPPER_4(Synth, addNoteOn);
+	API_METHOD_WRAPPER_5(Synth, addNoteOnGodmode);
 	API_VOID_METHOD_WRAPPER_3(Synth, addNoteOff);
 	API_VOID_METHOD_WRAPPER_1(Synth, setFixNoteOnAfterNoteOff);
 	API_VOID_METHOD_WRAPPER_3(Synth, addVolumeFade);
@@ -6251,6 +6252,11 @@ int ScriptingApi::Synth::internalAddNoteOn(int channel, int noteNumber, int velo
 int ScriptingApi::Synth::addNoteOn(int channel, int noteNumber, int velocity, int timeStampSamples)
 {
 	return internalAddNoteOn(channel, noteNumber, velocity, timeStampSamples, 0);
+}
+
+int ScriptingApi::Synth::addNoteOnGodmode(int channel, int noteNumber, int velocity, int timeStampSamples, int offset)
+{
+	return internalAddNoteOn(channel, noteNumber, velocity, timeStampSamples, offset);
 }
 
 void ScriptingApi::Synth::addNoteOff(int channel, int noteNumber, int timeStampSamples)

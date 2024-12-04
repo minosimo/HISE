@@ -1148,6 +1148,9 @@ public:
 		/** Adds a note on to the buffer. */
 		int addNoteOn(int channel, int noteNumber, int velocity, int timeStampSamples);
 
+		/** Give me all the control! */
+		int addNoteOnGodmode(int channel, int noteNumber, int velocity, int timeStampSamples, int offset);
+
 		/** Adds a note off to the buffer. */
 		void addNoteOff(int channel, int noteNumber, int timeStampSamples);
 
