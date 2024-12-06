@@ -515,6 +515,8 @@ public:
 
 	bool isNoteNumberMapped(int noteNumber) const;
 
+	bool isNoteMapped(int noteNumber, int velocity) const;
+
 	int getMidiInputLockValue(const Identifier& id) const;
 	void toggleMidiInputLock(const Identifier& propertyId, int lockValue);
 
