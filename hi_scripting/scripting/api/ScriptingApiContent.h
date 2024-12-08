@@ -2640,6 +2640,9 @@ public:
 	/** Returns an array of all components that match the given regex. */
     var getAllComponents(String regex);
 
+	/** Checks if the component exists. */
+	bool componentExists(const Identifier &name);
+
 	/** Restore the Component from a JSON object. */
 	void setPropertiesFromJSON(const Identifier &name, const var &jsonData);
 

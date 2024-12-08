@@ -6551,6 +6551,7 @@ colour(Colour(0xff777777))
 	setMethod("setName", Wrapper::setName);
 	setMethod("getComponent", Wrapper::getComponent);
 	setMethod("getAllComponents", Wrapper::getAllComponents);
+	setMethod("componentExists", Wrapper::componentExists);
 	setMethod("setPropertiesFromJSON", Wrapper::setPropertiesFromJSON);
 	setMethod("setValuePopupData", Wrapper::setValuePopupData);
 	setMethod("storeAllControlsAsPreset", Wrapper::storeAllControlsAsPreset);
@@ -6789,7 +6790,18 @@ void ScriptingApi::Content::setPropertiesFromJSON(const Identifier &componentNam
 	}
 }
 
+bool ScriptingApi::Content::componentExists(const Identifier &componentName)
+{
+	Identifier componentId(componentName);
 
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i]->getName() == componentId)
+			return true;
+	}
+
+	return false;
+}
 
 void ScriptingApi::Content::endInitialization()
 {
@@ -7451,7 +7463,6 @@ var ScriptingApi::Content::createShader(const String& fileName)
 
 	return var(f);
 }
-
 
 void ScriptingApi::Content::createScreenshot(var area, var directory, String name)
 {
