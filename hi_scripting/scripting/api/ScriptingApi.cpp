@@ -7037,6 +7037,7 @@ var ScriptingApi::Colours::toHsl(var colour)
 	hsl.add(hue);
 	hsl.add(saturation);
 	hsl.add(lightness);
+	hsl.add(c.getFloatAlpha());
 
 	return hsl;
 }
