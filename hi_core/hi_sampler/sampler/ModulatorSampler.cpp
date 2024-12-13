@@ -1824,7 +1824,7 @@ var ModulatorSampler::getSamplePropertyByMapping(int rrGroup, int noteNumber, in
 		auto rrIndex = (int)sound->getSampleProperty(SampleIds::RRGroup) - 1;
 
 		if (sound->appliesToNote(noteNumber) && sound->appliesToVelocity(velocity) && rrIndex == rrGroup)
-			return (int)sound->getSampleProperty(property);
+			return sound->getSampleProperty(property);
 	}
 
 	return false;
