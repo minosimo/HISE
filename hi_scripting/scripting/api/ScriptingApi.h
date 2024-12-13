@@ -967,7 +967,7 @@ public:
 		bool isNoteMapped(int noteNumber, int velocity);
 
 		/** Returns the sample end of the specified group, note, vel combination. */
-		bool getSampleEnd(int rrGroup, int noteNumber, int velocity);
+		int getSampleEnd(int rrGroup, int noteNumber, int velocity);
 
 		/** Refreshes the interface. Call this after you changed the properties. */
 		void refreshInterface();
