@@ -4562,7 +4562,7 @@ int ScriptingApi::Sampler::getSampleEnd(int rrGroup, int noteNumber, int velocit
 	return s->getSampleEnd(rrGroup, noteNumber, velocity);
 }
 
-int ScriptingApi::Sampler::getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property)
+var ScriptingApi::Sampler::getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property)
 {
 	ModulatorSampler *s = static_cast<ModulatorSampler*>(sampler.get());
 

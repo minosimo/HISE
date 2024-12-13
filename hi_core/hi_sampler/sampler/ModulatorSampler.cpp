@@ -1814,7 +1814,7 @@ int ModulatorSampler::getSampleEnd(int rrGroup, int noteNumber, int velocity) co
 	return false;
 }
 
-int ModulatorSampler::getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property) const
+var ModulatorSampler::getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property) const
 {
 	ModulatorSampler::SoundIterator sIter(this);
 	jassert(sIter.canIterate());

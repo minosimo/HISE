@@ -969,8 +969,8 @@ public:
 		/** Returns the sample end of the specified group, note, vel combination. */
 		int getSampleEnd(int rrGroup, int noteNumber, int velocity);
 
-		/** Returns the sample end of the specified group, note, vel combination. */
-		int getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int );
+		/** Returns  */
+		var getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int );
 
 		/** Refreshes the interface. Call this after you changed the properties. */
 		void refreshInterface();
