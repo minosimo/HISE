@@ -4546,7 +4546,7 @@ bool ScriptingApi::Sampler::isNoteMapped(int noteNumber, int velocity)
 	return s->isNoteMapped(noteNumber, velocity);
 }
 
-bool ScriptingApi::Sampler::getSampleEnd(int rrGroup, int noteNumber, int velocity)
+int ScriptingApi::Sampler::getSampleEnd(int rrGroup, int noteNumber, int velocity)
 {
 	ModulatorSampler *s = static_cast<ModulatorSampler*>(sampler.get());
 
