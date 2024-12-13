@@ -3723,6 +3723,7 @@ struct ScriptingApi::Sampler::Wrapper
 	API_METHOD_WRAPPER_1(Sampler, getMicPositionName);
 	API_METHOD_WRAPPER_1(Sampler, isNoteNumberMapped);
 	API_METHOD_WRAPPER_2(Sampler, isNoteMapped);
+	API_METHOD_WRAPPER_3(Sampler, getSampleEnd);
 	API_VOID_METHOD_WRAPPER_0(Sampler, refreshInterface);
 	API_VOID_METHOD_WRAPPER_1(Sampler, loadSampleMap);
 	API_METHOD_WRAPPER_0(Sampler, getSampleMapList);
@@ -3795,6 +3796,7 @@ sampler(sampler_)
     ADD_TYPED_API_METHOD_2(setAttribute, VarTypeChecker::Number, VarTypeChecker::Number);
 	ADD_API_METHOD_1(isNoteNumberMapped);
 	ADD_API_METHOD_2(isNoteMapped);
+	ADD_API_METHOD_3(getSampleEnd);
     ADD_API_METHOD_1(loadSampleForAnalysis);
 	ADD_API_METHOD_1(loadSfzFile);
 	ADD_API_METHOD_1(setUseStaticMatrix);
@@ -4542,6 +4544,20 @@ bool ScriptingApi::Sampler::isNoteMapped(int noteNumber, int velocity)
 
 
 	return s->isNoteMapped(noteNumber, velocity);
+}
+
+bool ScriptingApi::Sampler::getSampleEnd(int rrGroup, int noteNumber, int velocity)
+{
+	ModulatorSampler *s = static_cast<ModulatorSampler*>(sampler.get());
+
+	if (s == nullptr)
+	{
+		reportScriptError("getSampleEnd() only works with Samplers.");
+		RETURN_IF_NO_THROW(false)
+	}
+
+
+	return s->getSampleEnd(rrGroup, noteNumber, velocity);
 }
 
 void ScriptingApi::Sampler::refreshInterface()

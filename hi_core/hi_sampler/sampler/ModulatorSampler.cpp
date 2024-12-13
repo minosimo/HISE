@@ -1798,6 +1798,22 @@ bool ModulatorSampler::isNoteMapped(int noteNumber, int velocity) const
 	return false;
 }
 
+int ModulatorSampler::getSampleEnd(int rrGroup, int noteNumber, int velocity) const
+{
+	ModulatorSampler::SoundIterator sIter(this);
+	jassert(sIter.canIterate());
+
+	while (auto sound = sIter.getNextSound())
+	{
+		auto rrIndex = (int)sound->getSampleProperty(SampleIds::RRGroup) - 1;
+
+		if (sound->appliesToNote(noteNumber) && sound->appliesToVelocity(velocity) && rrIndex == rrGroup)
+			return (int)sound->getSampleProperty(SampleIds::SampleEnd);
+	}
+
+	return false;
+}
+
 int ModulatorSampler::getMidiInputLockValue(const Identifier& id) const
 {
 	if (id == SampleIds::RRGroup)
