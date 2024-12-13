@@ -962,6 +962,8 @@ public:
 
 		/** Checks whether the note number is mapped to any samples. */
 		bool isNoteNumberMapped(int noteNumber);
+
+		/** Checks whether the specified note number and velocity is mapped to any samples. */
 		bool isNoteMapped(int noteNumber, int velocity);
 
 		/** Refreshes the interface. Call this after you changed the properties. */
