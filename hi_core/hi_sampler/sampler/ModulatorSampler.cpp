@@ -1798,7 +1798,7 @@ bool ModulatorSampler::isNoteMapped(int noteNumber, int velocity) const
 	return false;
 }
 
-int ModulatorSampler::getSampleEnd(int rrGroup, int noteNumber, int velocity) const
+int ModulatorSampler::getSampleLength(int rrGroup, int noteNumber, int velocity) const
 {
 	ModulatorSampler::SoundIterator sIter(this);
 	jassert(sIter.canIterate());
@@ -1808,7 +1808,7 @@ int ModulatorSampler::getSampleEnd(int rrGroup, int noteNumber, int velocity) co
 		auto rrIndex = (int)sound->getSampleProperty(SampleIds::RRGroup) - 1;
 
 		if (sound->appliesToNote(noteNumber) && sound->appliesToVelocity(velocity) && rrIndex == rrGroup)
-			return (int)sound->getSampleProperty(SampleIds::SampleEnd);
+			return ((int)sound->getSampleProperty(SampleIds::SampleEnd) - (int)sound->getSampleProperty(SampleIds::SampleStart));
 	}
 
 	return false;

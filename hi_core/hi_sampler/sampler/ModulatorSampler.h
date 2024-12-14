@@ -517,7 +517,7 @@ public:
 
 	bool isNoteMapped(int noteNumber, int velocity) const;
 
-	int getSampleEnd(int rrGroup, int noteNumber, int velocity) const;
+	int getSampleLength(int rrGroup, int noteNumber, int velocity) const;
 
 	var getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property) const;
 
