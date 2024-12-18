@@ -519,8 +519,6 @@ public:
 
 	int getSampleLength(int rrGroup, int noteNumber, int velocity) const;
 
-	var getSamplePropertyByMapping(int rrGroup, int noteNumber, int velocity, int property) const;
-
 	int getMidiInputLockValue(const Identifier& id) const;
 	void toggleMidiInputLock(const Identifier& propertyId, int lockValue);
 
