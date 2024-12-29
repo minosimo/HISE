@@ -1527,17 +1527,17 @@ void MainController::skin(Component &c)
 
 void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositionInfo &/*newPosition*/)
 {
-	//static const Identifier bpmId("bpm");
-	//static const Identifier timeSigNumerator("timeSigNumerator");
-	//static const Identifier timeSigDenominator("timeSigDenominator");
-	//static const Identifier timeInSamples("timeInSamples");
-	//static const Identifier timeInSeconds("timeInSeconds");
+	static const Identifier bpmId("bpm");
+	static const Identifier timeSigNumerator("timeSigNumerator");
+	static const Identifier timeSigDenominator("timeSigDenominator");
+	static const Identifier timeInSamples("timeInSamples");
+	static const Identifier timeInSeconds("timeInSeconds");
 	//static const Identifier editOriginTime("editOriginTime");
-	//static const Identifier ppqPosition("ppqPosition");
+	static const Identifier ppqPosition("ppqPosition");
 	//static const Identifier ppqPositionOfLastBarStart("ppqPositionOfLastBarStart");
 	//static const Identifier frameRate("frameRate");
-	//static const Identifier isPlaying("isPlaying");
-	//static const Identifier isRecording("isRecording");
+	static const Identifier isPlaying("isPlaying");
+	static const Identifier isRecording("isRecording");
 	//static const Identifier ppqLoopStart("ppqLoopStart");
 	//static const Identifier ppqLoopEnd("ppqLoopEnd");
 	//static const Identifier isLooping("isLooping");
