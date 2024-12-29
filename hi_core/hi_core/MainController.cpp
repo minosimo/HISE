@@ -1525,7 +1525,7 @@ void MainController::skin(Component &c)
 };
 
 
-void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositionInfo &/*newPosition*/)
+void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositionInfo &newPosition)
 {
 	static const Identifier bpmId("bpm");
 	static const Identifier timeSigNumerator("timeSigNumerator");
@@ -1542,19 +1542,19 @@ void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositi
 	//static const Identifier ppqLoopEnd("ppqLoopEnd");
 	//static const Identifier isLooping("isLooping");
 
-	//ScopedLock sl(getLock());
+	ScopedLock sl(getLock());
 
-	//hostInfo->setProperty(bpmId, newPosition.bpm);
-	//hostInfo->setProperty(timeSigNumerator, newPosition.timeSigNumerator);
-	//hostInfo->setProperty(timeSigDenominator, newPosition.timeSigDenominator);
-	//hostInfo->setProperty(timeInSamples, newPosition.timeInSamples);
-	//hostInfo->setProperty(timeInSeconds, newPosition.timeInSeconds);
+	hostInfo->setProperty(bpmId, newPosition.bpm);
+	hostInfo->setProperty(timeSigNumerator, newPosition.timeSigNumerator);
+	hostInfo->setProperty(timeSigDenominator, newPosition.timeSigDenominator);
+	hostInfo->setProperty(timeInSamples, newPosition.timeInSamples);
+	hostInfo->setProperty(timeInSeconds, newPosition.timeInSeconds);
 	//hostInfo->setProperty(editOriginTime, newPosition.editOriginTime);
-	//hostInfo->setProperty(ppqPosition, newPosition.ppqPosition);
+	hostInfo->setProperty(ppqPosition, newPosition.ppqPosition);
 	//hostInfo->setProperty(ppqPositionOfLastBarStart, newPosition.ppqPositionOfLastBarStart);
 	//hostInfo->setProperty(frameRate, newPosition.frameRate);
-	//hostInfo->setProperty(isPlaying, newPosition.isPlaying);
-	//hostInfo->setProperty(isRecording, newPosition.isRecording);
+	hostInfo->setProperty(isPlaying, newPosition.isPlaying);
+	hostInfo->setProperty(isRecording, newPosition.isRecording);
 	//hostInfo->setProperty(ppqLoopStart, newPosition.ppqLoopStart);
 	//hostInfo->setProperty(ppqLoopEnd, newPosition.ppqLoopEnd);
 	//hostInfo->setProperty(isLooping, newPosition.isLooping);
