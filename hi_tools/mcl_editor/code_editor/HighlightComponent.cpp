@@ -207,7 +207,7 @@ SearchBoxComponent::SearchBoxComponent(TextDocument& d, float scaleFactor):
     regexButton.setTooltip("Enable regex pattern matching");
     wholeButton.setTooltip("Search for whole word");
     
-    caseButton.setToggleStateAndUpdateIcon(true);
+    caseButton.setToggleStateAndUpdateIcon(false);
     
     find.setTooltip("Goto next match (Return)");
     prev.setTooltip("Goto previous match");
