@@ -7,6 +7,9 @@ This is a fork of HISE with some mild changes I found necessary while building a
 * [Enabled](https://forum.hise.audio//post/17995) `Engine.getPlayHead()` methods.
 * Stopped the search from defaulting to case sensitive every time it's opened.
 
+
+Get the latest prebuilt binary [here](https://github.com/minosimo/HISE/releases/latest).
+
 I build HISE in a vanilla Debian 11 VM, and develop on Fedora 41.
 
 ![](http://hise.audio/images/github.png)
