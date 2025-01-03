@@ -1,5 +1,14 @@
 # HISE
 
+This is a fork of HISE with some mild changes I found necessary while building an instrument:
+* Added a method `addNoteOnGodmode(channel,note,velocity,duration,timestamp)` to generate a note on with all relevant parameters. Upstream, there are several functions for generating a note on that accept some, but not all parameters.
+* Added a method `isNoteMapped(note,velocity)`, that checks whether a note velocity combination has a sample mapped.
+* Added a mathod `getSampleLength(note,velocity)` to get the length of a sample.
+* [Enabled](https://forum.hise.audio//post/17995) `Engine.getPlayHead()` methods.
+* Stopped the search from defaulting to case sensitive every time it's opened.
+
+I build HISE in a vanilla Debian 11 VM, and develop on Fedora 41.
+
 ![](http://hise.audio/images/github.png)
 
 **Build Status macOS / Windows (`develop` branch)**  
