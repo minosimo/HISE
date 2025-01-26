@@ -221,6 +221,7 @@ struct ScriptingObjects::ScriptFile::Wrapper
 	API_METHOD_WRAPPER_1(ScriptFile, rename);
 	API_METHOD_WRAPPER_1(ScriptFile, move);
 	API_METHOD_WRAPPER_1(ScriptFile, copy);
+	API_METHOD_WRAPPER_1(ScriptFile, copyDirectory);
 	API_METHOD_WRAPPER_2(ScriptFile, isChildOf);
 	API_METHOD_WRAPPER_1(ScriptFile, isSameFileAs);
 	API_METHOD_WRAPPER_1(ScriptFile, toReferenceString);
@@ -283,6 +284,7 @@ ScriptingObjects::ScriptFile::ScriptFile(ProcessorWithScriptingContent* p, const
 	ADD_API_METHOD_1(rename);
 	ADD_API_METHOD_1(move);
 	ADD_API_METHOD_1(copy);
+	ADD_API_METHOD_1(copyDirectory);
 	ADD_API_METHOD_0(show);
 	ADD_API_METHOD_2(isChildOf);
 	ADD_API_METHOD_1(isSameFileAs);
@@ -809,6 +811,23 @@ bool ScriptingObjects::ScriptFile::copy(var target)
 		return f.copyFileTo(sf->f);
 	else
 		reportScriptError("target is not a file");
+
+	RETURN_IF_NO_THROW(false);
+}
+
+bool ScriptingObjects::ScriptFile::copyDirectory(var target)
+{	
+	if (auto sf = dynamic_cast<ScriptFile*>(target.getObject()))
+	{
+		if (!sf->f.isDirectory())
+			reportScriptError("target is not a directory");
+			
+		return f.copyDirectoryTo(sf->f);
+	}
+	else
+	{
+		reportScriptError("target is not a directory");
+	}
 
 	RETURN_IF_NO_THROW(false);
 }
@@ -5050,6 +5069,7 @@ struct ScriptingObjects::ScriptNeuralNetwork::Wrapper
 	API_METHOD_WRAPPER_0(ScriptNeuralNetwork, getModelJSON);
 	API_VOID_METHOD_WRAPPER_1(ScriptNeuralNetwork, loadTensorFlowModel);
 	API_VOID_METHOD_WRAPPER_1(ScriptNeuralNetwork, loadPytorchModel);
+	API_VOID_METHOD_WRAPPER_1(ScriptNeuralNetwork, loadNAMModel);
 	API_METHOD_WRAPPER_1(ScriptNeuralNetwork, createModelJSONFromTextFile);
 	API_METHOD_WRAPPER_2(ScriptNeuralNetwork, loadOnnxModel);
 	API_METHOD_WRAPPER_3(ScriptNeuralNetwork, processFFTSpectrum);
@@ -5066,6 +5086,7 @@ ScriptingObjects::ScriptNeuralNetwork::ScriptNeuralNetwork(ProcessorWithScriptin
 	ADD_API_METHOD_1(createModelJSONFromTextFile);
 	ADD_API_METHOD_1(loadTensorFlowModel);
 	ADD_API_METHOD_1(loadPytorchModel);
+	ADD_API_METHOD_1(loadNAMModel);
 	ADD_API_METHOD_0(getModelJSON);
 	ADD_API_METHOD_2(loadOnnxModel);
 	ADD_API_METHOD_3(processFFTSpectrum);
@@ -5289,6 +5310,16 @@ void ScriptingObjects::ScriptNeuralNetwork::loadPytorchModel(const var& modelJSO
 #endif
 }
 
+void ScriptingObjects::ScriptNeuralNetwork::loadNAMModel(const var& modelJSON)
+{
+#if HISE_INCLUDE_RT_NEURAL
+	nn->loadNAMModel(modelJSON);
+	postBuild();
+#else
+	reportScriptError("You must enable HISE_INCLUDE_RT_NEURAL");
+#endif
+}
+
 bool ScriptingObjects::ScriptNeuralNetwork::loadOnnxModel(const var& base64Data, int numOutputs)
 {
 	if(onnx == nullptr)
@@ -5322,8 +5353,6 @@ var ScriptingObjects::ScriptNeuralNetwork::processFFTSpectrum(var fftObject, int
 
 			auto parameters = fft->getSpectrum2DParameters();
 			auto isGreyscale = (int)parameters["ColourScheme"] == 0;
-
-			Spectrum2D::testImage(img, true, "processFFTSpectrum");
 
 			onnx->run(img, onnxOutput, isGreyscale);
 
@@ -7671,8 +7700,6 @@ Image ScriptingObjects::ScriptFFT::getRescaledAndRotatedSpectrum(bool getOutput,
 
 	auto thisImg = gin::applyResize(getSpectrum(getOutput), numFreqPixels, numTimePixels);
 	
-	Spectrum2D::testImage(thisImg, false, "after rescaling");
-
 	Image rotated(Image::PixelFormat::ARGB, thisImg.getHeight(), thisImg.getWidth(), false);
 	Image::BitmapData r(rotated, Image::BitmapData::writeOnly);
 
@@ -7684,8 +7711,6 @@ Image ScriptingObjects::ScriptFFT::getRescaledAndRotatedSpectrum(bool getOutput,
 			rotated.setPixelAt(x, y, p.withAlpha(1.0f));
 		}
 	}
-
-	Spectrum2D::testImage(rotated, true, "after rotation");
 
 	return rotated;
 }

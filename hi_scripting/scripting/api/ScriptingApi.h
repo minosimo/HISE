@@ -556,6 +556,9 @@ public:
 		/** Returns the current preload message if there is one. */
 		String getPreloadMessage();
 
+		/** Sets the preload message. */
+		void setPreloadMessage(String message);
+
 		/** Returns the current Zoom Level. */
 		var getZoomLevel() const;
 
@@ -888,6 +891,9 @@ public:
 
 		/** Sets the volume of a particular group (use -1 for active group). Only works with disabled crossfade tables. */
 		void setRRGroupVolume(int groupIndex, int gainInDecibels);
+
+		/** Enable / disables the release start feature for the given event. */
+		bool setAllowReleaseStart(int eventId, bool shouldBeAllowed);
 
 		/** Returns the currently (single) active RR group. */
 		int getActiveRRGroup();

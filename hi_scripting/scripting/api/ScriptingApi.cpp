@@ -1204,6 +1204,7 @@ struct ScriptingApi::Engine::Wrapper
 	API_VOID_METHOD_WRAPPER_0(Engine, reloadAllSamples);
 	API_METHOD_WRAPPER_0(Engine, getPreloadProgress);
 	API_METHOD_WRAPPER_0(Engine, getPreloadMessage);
+	API_VOID_METHOD_WRAPPER_1(Engine, setPreloadMessage);
 	API_METHOD_WRAPPER_0(Engine, getDeviceType);
 	API_METHOD_WRAPPER_0(Engine, getDeviceResolution);
 	API_METHOD_WRAPPER_0(Engine, getZoomLevel);
@@ -1359,6 +1360,7 @@ parentMidiProcessor(dynamic_cast<ScriptBaseMidiProcessor*>(p))
 	ADD_API_METHOD_0(isPlugin);
 	ADD_API_METHOD_0(getPreloadProgress);
 	ADD_API_METHOD_0(getPreloadMessage);
+	ADD_API_METHOD_1(setPreloadMessage);
 	ADD_API_METHOD_0(getZoomLevel);
 	ADD_API_METHOD_1(setZoomLevel);
 	ADD_API_METHOD_1(setDiskMode);
@@ -1824,6 +1826,11 @@ double ScriptingApi::Engine::getPreloadProgress()
 String ScriptingApi::Engine::getPreloadMessage()
 {
 	return getScriptProcessor()->getMainController_()->getSampleManager().getPreloadMessage();
+}
+
+void ScriptingApi::Engine::setPreloadMessage(String message)
+{
+	getScriptProcessor()->getMainController_()->getSampleManager().setPreloadMessage(message);
 }
 
 var ScriptingApi::Engine::getZoomLevel() const
@@ -2375,7 +2382,7 @@ void ScriptingApi::Engine::setLatencySamples(int latency)
 
 int ScriptingApi::Engine::getMidiNoteFromName(String midiNoteName) const
 {
-	for (int i = 0; i < 127; i++)
+	for (int i = 0; i < 128; i++)
 	{
 		if (getMidiNoteName(i) == midiNoteName)
 			return i;
@@ -3755,6 +3762,7 @@ struct ScriptingApi::Sampler::Wrapper
 	API_METHOD_WRAPPER_2(Sampler, importSamples);
 	API_METHOD_WRAPPER_0(Sampler, clearSampleMap);
 	API_METHOD_WRAPPER_1(Sampler, parseSampleFile);
+	API_METHOD_WRAPPER_2(Sampler, setAllowReleaseStart);
 	API_VOID_METHOD_WRAPPER_2(Sampler, setGUISelection);
 	API_VOID_METHOD_WRAPPER_1(Sampler, setSortByRRGroup);
 };
@@ -3814,6 +3822,7 @@ sampler(sampler_)
 	ADD_API_METHOD_1(loadSampleMapFromJSON);
 	ADD_API_METHOD_1(loadSampleMapFromBase64);
 	ADD_API_METHOD_0(getSampleMapAsBase64);
+	ADD_API_METHOD_2(setAllowReleaseStart);
 	ADD_API_METHOD_1(getAudioWaveformContentAsBase64);
 	ADD_API_METHOD_1(setTimestretchRatio);
 	ADD_API_METHOD_1(setTimestretchOptions);
@@ -3937,6 +3946,19 @@ void ScriptingApi::Sampler::setRRGroupVolume(int groupIndex, int gainInDecibels)
 	}
 
 	s->setRRGroupVolume(groupIndex, Decibels::decibelsToGain((float)gainInDecibels));
+}
+
+bool ScriptingApi::Sampler::setAllowReleaseStart(int eventId, bool shouldBeAllowed)
+{
+	ModulatorSampler *s = static_cast<ModulatorSampler*>(sampler.get());
+
+	if (s == nullptr)
+	{
+		reportScriptError("setAllowReleaseStart() only works with Samplers.");
+		return false;
+	}
+
+	return s->setAllowReleaseStart(eventId, shouldBeAllowed);
 }
 
 
@@ -6220,7 +6242,7 @@ int ScriptingApi::Synth::internalAddNoteOn(int channel, int noteNumber, int velo
 {
 	if (channel > 0 && channel <= 16)
 	{
-		if (noteNumber >= 0 && noteNumber < 127)
+		if (noteNumber >= 0 && noteNumber <= 127)
 		{
 			if (velocity >= 0 && velocity <= 127)
 			{
@@ -6296,7 +6318,7 @@ void ScriptingApi::Synth::addNoteOff(int channel, int noteNumber, int timeStampS
 {
 	if (channel > 0 && channel <= 16)
 	{
-		if (noteNumber >= 0 && noteNumber < 127)
+		if (noteNumber >= 0 && noteNumber <= 127)
 		{
 			if (timeStampSamples >= 0)
 			{
@@ -7322,6 +7344,13 @@ int64 ScriptingApi::FileSystem::getBytesFreeOnVolume(var folder)
 
 void ScriptingApi::FileSystem::browseInternally(File f, bool forSaving, bool isDirectory, String wildcard, var callback)
 {
+	static bool fileChooserIsOpen = false;
+
+	if (fileChooserIsOpen)
+			return;
+
+	fileChooserIsOpen = true;
+
 	auto p_ = p;
 
 	WeakCallbackHolder wc(p_, this, callback, 1);
@@ -7358,6 +7387,8 @@ void ScriptingApi::FileSystem::browseInternally(File f, bool forSaving, bool isD
 		{
 			wc.call(&a, 1);
 		}
+		
+		fileChooserIsOpen = false;
 	};
 
 	MessageManager::callAsync(cb);

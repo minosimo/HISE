@@ -61,6 +61,16 @@ currentColumnMode(OneColumn)
 }
 
 
+void BackendCommandTarget::setCommandTarget(ApplicationCommandInfo& result, const String& name, bool active,
+	bool ticked, char shortcut, bool useShortCut, ModifierKeys mod)
+{
+	result.setInfo(name, name, "Unused", 0);
+	result.setActive(active); 
+	result.setTicked(ticked);
+
+	if (useShortCut) result.addDefaultKeypress(shortcut, mod);
+}
+
 void BackendCommandTarget::setEditor(BackendRootWindow *editor)
 {
 	bpe = dynamic_cast<BackendRootWindow*>(editor);
@@ -105,6 +115,7 @@ void BackendCommandTarget::getAllCommands(Array<CommandID>& commands)
 		MenuFileExtractEmbeddeSnippetFiles,
 		MenuFileImportSnippet,
 		MenuExportSetupWizard,
+		MenuExportCompileProject,
 		MenuExportFileAsPlugin,
 		MenuExportFileAsEffectPlugin,
 		MenuExportFileAsMidiFXPlugin,
@@ -152,6 +163,7 @@ void BackendCommandTarget::getAllCommands(Array<CommandID>& commands)
 		MenuToolsApplySampleMapProperties,
 		MenuToolsSimulateChangingBufferSize,
 		MenuToolsShowDspNetworkDllInfo,
+		MenuToolsReplaceScriptFXWithHardcodedFX,
         MenuToolsCreateRnboTemplate,
 		MenuToolsCreateGlobalCableCppCode,
 		MenuViewResetLookAndFeel,
@@ -326,6 +338,10 @@ void BackendCommandTarget::getCommandInfo(CommandID commandID, ApplicationComman
 		break;
 	case MenuExportSetupWizard:
 		setCommandTarget(result, "Setup Export Wizard", true, false, 'X', false);
+		result.categoryName = "Export";
+		break;
+	case MenuExportCompileProject:
+		setCommandTarget(result, "Compile project", true, false, 'X', false);
 		result.categoryName = "Export";
 		break;
     case MenuExportFileAsPlugin:
@@ -558,6 +574,10 @@ void BackendCommandTarget::getCommandInfo(CommandID commandID, ApplicationComman
 		setCommandTarget(result, "Create C++ code for global cables", true, false, 'X', false);
 		result.categoryName = "Tools";
 		break;
+	case MenuToolsReplaceScriptFXWithHardcodedFX:
+		setCommandTarget(result, "Replace Scriptnode modules with Hardcoded modules", true, false, 'X', false);
+		result.categoryName = "Tools";
+		break;
 	case MenuToolsConvertSVGToPathData:
 		setCommandTarget(result, "Show SVG to Path Converter", true, false, 'X', false);
 		result.categoryName = "Tools";
@@ -687,6 +707,7 @@ bool BackendCommandTarget::perform(const InvocationInfo &info)
 	case MenuToolsRecompile:            Actions::recompileAllScripts(bpe); return true;
 	case MenuToolsCheckCyclicReferences:Actions::checkCyclicReferences(bpe); return true;
 	case MenuToolsCreateExternalScriptFile:	Actions::createExternalScriptFile(bpe); updateCommands(); return true;
+	case MenuExportCompileProject: Actions::compileProject(bpe); return true;
 	case MenuExportValidateUserPresets:	Actions::validateUserPresets(bpe); return true;
 	case MenuExportRestoreToDefault:		Actions::restoreToDefault(bpe); return true;
 	case MenuExportCheckUnusedImages:	Actions::checkUnusedImages(bpe); return true;
@@ -750,6 +771,7 @@ bool BackendCommandTarget::perform(const InvocationInfo &info)
     case MenuViewClearConsole:         owner->getConsoleHandler().clearConsole(); return true;
 	case MenuHelpShowAboutPage:			Actions::showAboutPage(bpe); return true;
     case MenuHelpCheckVersion:          Actions::checkVersion(bpe); return true;
+	case MenuToolsReplaceScriptFXWithHardcodedFX: Actions::replaceScriptModules(bpe); return true;
 	case MenuHelpShowDocumentation:		Actions::showDocWindow(bpe); return true;
 	}
 
@@ -974,7 +996,10 @@ PopupMenu BackendCommandTarget::getMenuForIndex(int topLevelMenuIndex, const Str
 		{
 			ADD_MENU_ITEM(MenuExportSetupWizard);
 
+			ADD_MENU_ITEM(MenuExportCompileProject);
+
 			p.addSectionHeader("Export As");
+
 			ADD_MENU_ITEM(MenuExportFileAsPlugin);
 			ADD_MENU_ITEM(MenuExportFileAsEffectPlugin);
 			ADD_MENU_ITEM(MenuExportFileAsMidiFXPlugin);
@@ -1061,6 +1086,7 @@ PopupMenu BackendCommandTarget::getMenuForIndex(int topLevelMenuIndex, const Str
 			p.addSectionHeader("DSP Tools");
 
 			ADD_MENU_ITEM(MenuToolsShowDspNetworkDllInfo);
+			ADD_MENU_ITEM(MenuToolsReplaceScriptFXWithHardcodedFX);
 			ADD_MENU_ITEM(MenuToolsRecordOneSecond);
 			ADD_MENU_ITEM(MenuToolsSimulateChangingBufferSize);
 	        ADD_MENU_ITEM(MenuToolsCreateRnboTemplate);
@@ -1776,106 +1802,102 @@ void BackendCommandTarget::Actions::createRnboTemplate(BackendRootWindow* bpe)
 
 void BackendCommandTarget::Actions::saveFileXml(BackendRootWindow * bpe)
 {
-	if (PresetHandler::showYesNoWindow("Save XML", "This will save the current XML file"))
+	if (!PresetHandler::showYesNoWindow("Save XML", "This will save the current XML file"))
+		return;
+	
+	bpe->owner->getUserPresetHandler().initDefaultPresetManager({});
+	
+	const String mainSynthChainId = bpe->owner->getMainSynthChain()->getId();
+	const bool hasDefaultName = mainSynthChainId == "Master Chain";
+	
+	if (hasDefaultName)
 	{
-		bpe->owner->getUserPresetHandler().initDefaultPresetManager({});
-
-		const String mainSynthChainId = bpe->owner->getMainSynthChain()->getId();
-		const bool hasDefaultName = mainSynthChainId == "Master Chain";
-
-		if (!hasDefaultName)
-		{
-			File f = GET_PROJECT_HANDLER(bpe->getMainSynthChain()).getSubDirectory(ProjectHandler::SubDirectories::XMLPresetBackups).getChildFile(mainSynthChainId + ".xml");
-
-			if (GET_PROJECT_HANDLER(bpe->getMainSynthChain()).isActive())
-			{
-				if (f.existsAsFile())
-				{
-					if (PresetHandler::showYesNoWindow("Overwrite " + mainSynthChainId, "Overwrite the existing XML?"))
-					{
-						ValueTree v = bpe->owner->getMainSynthChain()->exportAsValueTree();
-
-			            v.setProperty("BuildVersion", BUILD_SUB_VERSION, nullptr);
-			            
-						auto xml = v.createXml();
-						
-						XmlBackupFunctions::removeEditorStatesFromXml(*xml);
-						
-						Processor::Iterator<ModulatorSampler> siter(bpe->getMainSynthChain());
-
-						while (auto s = siter.getNextProcessor())
-						{
-							if (s->getSampleMap()->hasUnsavedChanges())
-								s->getSampleMap()->saveAndReloadMap();
-						}
-
-						File originalScriptDirectory = XmlBackupFunctions::getScriptDirectoryFor(bpe->getMainSynthChain());
-
-						File scriptDirectory = originalScriptDirectory.getSiblingFile("TempScriptDirectory");
-
-						Processor::Iterator<JavascriptProcessor> iter(bpe->getMainSynthChain());
-
-						scriptDirectory.deleteRecursively();
-
-						scriptDirectory.createDirectory();
-
-						String interfaceId = "";
-
-						while (JavascriptProcessor *sp = iter.getNextProcessor())
-						{
-							if (sp->isConnectedToExternalFile())
-								continue;
-
-							String content;
-
-							if (auto jmp = dynamic_cast<JavascriptMidiProcessor*>(sp))
-							{
-								if (jmp->isFront())
-									interfaceId = jmp->getId();
-							}
-
-							sp->mergeCallbacksToScript(content);
-
-							File scriptFile = XmlBackupFunctions::getScriptFileFor(bpe->getMainSynthChain(), scriptDirectory, dynamic_cast<Processor*>(sp)->getId());
-
-							scriptFile.replaceWithText(content);
-						}
-
-						XmlBackupFunctions::removeAllScripts(*xml);
-
-						if(interfaceId.isNotEmpty())
-							XmlBackupFunctions::extractContentData(*xml, interfaceId, f);
-
-						f.replaceWithText(xml->createDocument(""));
-
-						debugToConsole(bpe->owner->getMainSynthChain(), "Save " + mainSynthChainId + " to " + f.getFullPathName());
-			            
-						if (originalScriptDirectory.deleteRecursively())
-						{
-							scriptDirectory.moveFileTo(originalScriptDirectory);
-						}
-						else
-						{
-							PresetHandler::showMessageWindow("Error at writing script file",
-								"The embedded script files could not be saved (probably because the file is opened somewhere else).\nPress OK to show the folder and move it manually", PresetHandler::IconType::Error);
-
-							scriptDirectory.revealToUser();
-						}
-					}
-				}
-				else
-				{
-					debugToConsole(bpe->owner->getMainSynthChain(), "Master Chain name is not default but no corresponding XML found, please create XML first");
-					Actions::saveFileAsXml(bpe);
-				}
-			}
-		}
-		else
-		{
-			debugToConsole(bpe->owner->getMainSynthChain(), "This project has never been saved as XML, please create XML first");
-			Actions::saveFileAsXml(bpe);
-		}
+		debugToConsole(bpe->owner->getMainSynthChain(), "This project has never been saved as XML, please create XML first");
+		Actions::saveFileAsXml(bpe);
+		return;		
 	}
+	
+	File f = GET_PROJECT_HANDLER(bpe->getMainSynthChain()).getSubDirectory(ProjectHandler::SubDirectories::XMLPresetBackups).getChildFile(mainSynthChainId + ".xml");
+
+	if (!GET_PROJECT_HANDLER(bpe->getMainSynthChain()).isActive())
+		return;
+		
+	if (!f.existsAsFile())
+	{
+		debugToConsole(bpe->owner->getMainSynthChain(), "Master Chain name is not default but no corresponding XML found, please create XML first");
+		Actions::saveFileAsXml(bpe);
+		return;
+	}
+	
+	if (!PresetHandler::showYesNoWindow("Overwrite " + mainSynthChainId, "Overwrite the existing XML?"))
+		return;
+	
+	ValueTree v = bpe->owner->getMainSynthChain()->exportAsValueTree();
+	v.setProperty("BuildVersion", BUILD_SUB_VERSION, nullptr);
+	
+	auto xml = v.createXml();
+			
+	XmlBackupFunctions::removeEditorStatesFromXml(*xml);
+	
+	Processor::Iterator<ModulatorSampler> siter(bpe->getMainSynthChain());	            
+
+	while (auto s = siter.getNextProcessor())
+	{
+		if (s->getSampleMap()->hasUnsavedChanges())
+			s->getSampleMap()->saveAndReloadMap();
+	}
+						
+	File originalScriptDirectory = XmlBackupFunctions::getScriptDirectoryFor(bpe->getMainSynthChain());			
+						
+	File scriptDirectory = originalScriptDirectory.getSiblingFile("TempScriptDirectory");					
+						
+	Processor::Iterator<JavascriptProcessor> iter(bpe->getMainSynthChain());
+
+	scriptDirectory.deleteRecursively();
+	scriptDirectory.createDirectory();
+	
+	String interfaceId = "";
+
+	while (JavascriptProcessor *sp = iter.getNextProcessor())
+	{
+		if (sp->isConnectedToExternalFile())
+			continue;
+
+		String content;
+
+		if (auto jmp = dynamic_cast<JavascriptMidiProcessor*>(sp))
+		{
+			if (jmp->isFront())
+				interfaceId = jmp->getId();
+		}
+
+		sp->mergeCallbacksToScript(content);
+
+		File scriptFile = XmlBackupFunctions::getScriptFileFor(bpe->getMainSynthChain(), scriptDirectory, dynamic_cast<Processor*>(sp)->getId());
+
+		scriptFile.replaceWithText(content);
+	}
+	
+	XmlBackupFunctions::removeAllScripts(*xml);				
+
+	if(interfaceId.isNotEmpty())
+		XmlBackupFunctions::extractContentData(*xml, interfaceId, f);					
+
+	f.replaceWithText(xml->createDocument(""));
+	
+	debugToConsole(bpe->owner->getMainSynthChain(), "Save " + mainSynthChainId + " to " + f.getFullPathName());
+
+	if (originalScriptDirectory.deleteRecursively())
+	{
+		scriptDirectory.moveFileTo(originalScriptDirectory);
+	}
+	else
+	{
+		PresetHandler::showMessageWindow("Error at writing script file",
+			"The embedded script files could not be saved (probably because the file is opened somewhere else).\nPress OK to show the folder and move it manually", PresetHandler::IconType::Error);
+
+		scriptDirectory.revealToUser();
+	}	
 }
 
 void BackendCommandTarget::Actions::saveFileAsXml(BackendRootWindow * bpe)
@@ -2074,8 +2096,14 @@ DialogWindowWithBackgroundThread* BackendCommandTarget::Actions::importProject(B
 	return nullptr;
 }
 
+void BackendCommandTarget::Actions::compileProject(BackendRootWindow* bpe)
+{
+	auto cw = new multipage::library::CompileProjectDialog(bpe);
+	cw->setModalBaseWindowComponent(bpe);
+}
+
 struct HeadlessImporter: public ImporterBase,
-						 public Thread
+                         public Thread
 {
 	HeadlessImporter(BackendRootWindow* bpe, const File& projectRoot):
 	  ImporterBase(bpe),
@@ -2627,8 +2655,13 @@ void BackendCommandTarget::Actions::compileNetworksToDll(BackendRootWindow* bpe)
 		return;
 	}
 
+#if JUCE_WINDOWS || JUCE_MAC
+	auto s = new multipage::library::NetworkCompiler(bpe);
+	s->setModalBaseWindowComponent(bpe);
+#else
 	auto s = new DspNetworkCompileExporter(bpe, bpe->getBackendProcessor());
 	s->setModalBaseWindowComponent(bpe);
+#endif
 }
 
 void BackendCommandTarget::Actions::cleanBuildDirectory(BackendRootWindow * bpe)
@@ -3356,6 +3389,12 @@ void BackendCommandTarget::Actions::exportAudio(BackendRootWindow* bpe)
 {
 	auto n = new multipage::library::HiseAudioExporter(bpe);
 	bpe->setModalComponent(n);
+}
+
+void BackendCommandTarget::Actions::replaceScriptModules(BackendRootWindow* bpe)
+{
+	auto b = new multipage::library::ScriptModuleReplacer(bpe);
+	bpe->setModalComponent(b);		
 }
 
 #undef REPLACE_WILDCARD

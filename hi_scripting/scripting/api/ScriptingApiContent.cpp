@@ -3335,7 +3335,7 @@ void ScriptingApi::Content::ScriptSliderPack::setSliderAtIndex(int index, double
 	if (auto d = getCachedSliderPack())
 	{
 		value = index;
-		d->setValue(index, (float)newValue, dontSendNotification);
+		d->setValue(index, (float)newValue, allValueChangeCausesCallback ? sendNotificationAsync : dontSendNotification);
 
 		if(allValueChangeCausesCallback)
 			d->getUpdater().sendDisplayChangeMessage((float)index, sendNotificationAsync);
@@ -6188,6 +6188,7 @@ void ScriptingApi::Content::ScriptMultipageDialog::onMultipageLog(ScriptMultipag
 	{
 		auto p = m.getScriptProcessor()->getMainController_()->getMainSynthChain();
 		debugToConsole(p, message);
+        ignoreUnused(p);
 	}
 }
 
