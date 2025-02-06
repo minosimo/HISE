@@ -1535,7 +1535,7 @@ void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositi
 	static const Identifier editOriginTime("editOriginTime");
 	static const Identifier ppqPosition("ppqPosition");
 	static const Identifier ppqPositionOfLastBarStart("ppqPositionOfLastBarStart");
-	static const Identifier frameRate("frameRate");
+	// static const Identifier frameRate("frameRate");
 	static const Identifier isPlaying("isPlaying");
 	static const Identifier isRecording("isRecording");
 	static const Identifier ppqLoopStart("ppqLoopStart");
@@ -1552,7 +1552,7 @@ void MainController::storePlayheadIntoDynamicObject(AudioPlayHead::CurrentPositi
 	hostInfo->setProperty(editOriginTime, newPosition.editOriginTime);
 	hostInfo->setProperty(ppqPosition, newPosition.ppqPosition);
 	hostInfo->setProperty(ppqPositionOfLastBarStart, newPosition.ppqPositionOfLastBarStart);
-	hostInfo->setProperty(frameRate, newPosition.frameRate);
+	// hostInfo->setProperty(frameRate, newPosition.frameRate);
 	hostInfo->setProperty(isPlaying, newPosition.isPlaying);
 	hostInfo->setProperty(isRecording, newPosition.isRecording);
 	hostInfo->setProperty(ppqLoopStart, newPosition.ppqLoopStart);
