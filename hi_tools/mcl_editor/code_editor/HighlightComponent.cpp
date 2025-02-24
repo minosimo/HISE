@@ -310,10 +310,7 @@ void SearchBoxComponent::setSearchInput(const String& text)
         
         auto equals = [&](const String& text, const String& searchTerm)
         {
-            if(caseButton.getToggleState())
-                return text == searchTerm;
-            else
-                return text.toLowerCase() == searchTerm.toLowerCase();
+            return text.toLowerCase() == searchTerm.toLowerCase();
         };
         
         while (p.getPosition() < doc.getCodeDocument().getNumCharacters())
